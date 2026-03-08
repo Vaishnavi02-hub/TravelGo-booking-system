@@ -1,0 +1,175 @@
+# TravelGo .gitignore
+# Specifies intentionally untracked files to ignore
+
+# ============================================================================
+# Python
+# ============================================================================
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Virtual environments
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+.venv/
+
+# ============================================================================
+# Flask
+# ============================================================================
+
+instance/
+.webassets-cache
+
+# Flask session files
+flask_session/
+
+# ============================================================================
+# Environment Variables
+# ============================================================================
+
+# Never commit environment files with secrets
+.env
+.env.local
+.env.*.local
+
+# ============================================================================
+# IDEs and Editors
+# ============================================================================
+
+# VS Code
+.vscode/
+.history/
+
+# PyCharm
+.idea/
+*.iml
+*.iws
+.idea_modules/
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+.\#*
+
+# ============================================================================
+# Operating System
+# ============================================================================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+
+# Linux
+.directory
+.Trash-*
+
+# ============================================================================
+# Logs
+# ============================================================================
+
+*.log
+logs/
+*.log.*
+
+# ============================================================================
+# AWS
+# ============================================================================
+
+# AWS credentials (never commit these!)
+.aws/
+aws-credentials.json
+
+# ============================================================================
+# Database
+# ============================================================================
+
+*.db
+*.sqlite
+*.sqlite3
+
+# ============================================================================
+# Temporary Files
+# ============================================================================
+
+*.tmp
+*.temp
+*.bak
+*.backup
+*.old
+
+# ============================================================================
+# Project Specific
+# ============================================================================
+
+# User uploads (if any)
+uploads/
+static/uploads/
+
+# Generated files
+*.pyc
+.pytest_cache/

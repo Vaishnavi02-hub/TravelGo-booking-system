@@ -1,0 +1,213 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - TravelGo{% endblock %}
+
+{% block content %}
+<section class="booking-section">
+    <div class="container">
+        <div class="booking-header">
+            <a href="{{ url_for('dashboard') }}" class="back-link">← Back to Dashboard</a>
+            <h1>{{ title }}</h1>
+            <p>Choose from our available {{ booking_type }} options</p>
+        </div>
+
+        {% if booking_type == 'hotel' and show_filter %}
+        <!-- Hotel Filter -->
+        <div class="filter-section">
+            <h3>Filter by Category:</h3>
+            <div class="filter-buttons">
+                <a href="{{ url_for('book_hotel', category='all') }}" class="btn btn-secondary">All Hotels</a>
+                <a href="{{ url_for('book_hotel', category='budget') }}" class="btn btn-secondary">Budget</a>
+                <a href="{{ url_for('book_hotel', category='luxury') }}" class="btn btn-secondary">Luxury</a>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Options List -->
+        <div class="options-list">
+            {% if options %}
+                {% for option in options %}
+                <div class="option-card">
+                    <div class="option-header">
+                        <h3>{{ option.name }}</h3>
+                        <div class="option-price">₹{{ option.price }}</div>
+                    </div>
+
+                    <div class="option-details">
+                        {% if booking_type in ['bus', 'train', 'flight'] %}
+                            <div class="detail-item">
+                                <span class="detail-label">From:</span>
+                                <span class="detail-value">{{ option.from }}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">To:</span>
+                                <span class="detail-value">{{ option.to }}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Date:</span>
+                                <span class="detail-value">{{ option.date }}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Time:</span>
+                                <span class="detail-value">{{ option.time }}</span>
+                            </div>
+                            {% if booking_type in ['train', 'flight'] %}
+                            <div class="detail-item">
+                                <span class="detail-label">Class:</span>
+                                <span class="detail-value">{{ option.class }}</span>
+                            </div>
+                            {% endif %}
+                        {% elif booking_type == 'hotel' %}
+                            <div class="detail-item">
+                                <span class="detail-label">Location:</span>
+                                <span class="detail-value">{{ option.location }}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Rating:</span>
+                                <span class="detail-value">⭐ {{ option.rating }}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Category:</span>
+                                <span class="detail-value">{{ option.category.capitalize() }}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Amenities:</span>
+                                <span class="detail-value">{{ option.amenities|join(', ') }}</span>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="option-actions">
+                        <button class="btn btn-primary" onclick="openBookingModal('{{ booking_type }}', '{{ option.id }}', '{{ option.name }}', {{ option.price }}, {{ option.seats|tojson|safe if booking_type == 'bus' else '[]' }})">
+                            Book Now
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="no-options">
+                    <p>No {{ booking_type }} options available at the moment.</p>
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-primary">Back to Dashboard</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- Booking Modal -->
+<div id="bookingModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeBookingModal()">&times;</span>
+        <h2>Confirm Your Booking</h2>
+        
+        <form method="POST" action="{{ url_for('confirm_booking') }}" id="bookingForm">
+            <input type="hidden" name="booking_type" id="modal_booking_type">
+            <input type="hidden" name="option_id" id="modal_option_id">
+
+            <div class="booking-summary">
+                <h3 id="modal_option_name"></h3>
+                <p class="booking-price">Price: ₹<span id="modal_price"></span></p>
+            </div>
+
+            <!-- Seat selection for bus -->
+            <div id="seat_selection" style="display: none;">
+                <div class="form-group">
+                    <label for="seat">Select Seat:</label>
+                    <select name="seat" id="seat" class="form-control">
+                        <!-- Seats will be populated dynamically -->
+                    </select>
+                </div>
+            </div>
+
+            <!-- Hotel-specific fields -->
+            <div id="hotel_fields" style="display: none;">
+                <div class="form-group">
+                    <label for="check_in">Check-in Date:</label>
+                    <input type="date" name="check_in" id="check_in" class="form-control" min="{{ today }}">
+                </div>
+                <div class="form-group">
+                    <label for="check_out">Check-out Date:</label>
+                    <input type="date" name="check_out" id="check_out" class="form-control" min="{{ today }}">
+                </div>
+                <div class="form-group">
+                    <label for="guests">Number of Guests:</label>
+                    <input type="number" name="guests" id="guests" class="form-control" min="1" max="10" value="1">
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button type="submit" class="btn btn-primary">Confirm Booking</button>
+                <button type="button" class="btn btn-secondary" onclick="closeBookingModal()">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Get today's date for hotel date inputs
+    const today = new Date().toISOString().split('T')[0];
+    document.querySelectorAll('#check_in, #check_out').forEach(input => {
+        input.setAttribute('min', today);
+    });
+
+    function openBookingModal(type, id, name, price, seats) {
+        document.getElementById('bookingModal').style.display = 'block';
+        document.getElementById('modal_booking_type').value = type;
+        document.getElementById('modal_option_id').value = id;
+        document.getElementById('modal_option_name').textContent = name;
+        document.getElementById('modal_price').textContent = price;
+
+        // Hide all conditional fields first
+        document.getElementById('seat_selection').style.display = 'none';
+        document.getElementById('hotel_fields').style.display = 'none';
+
+        // Show relevant fields based on booking type
+        if (type === 'bus') {
+            const seatSelect = document.getElementById('seat');
+            seatSelect.innerHTML = '<option value="">Choose a seat...</option>';
+            seats.forEach(seat => {
+                const option = document.createElement('option');
+                option.value = seat;
+                option.textContent = seat;
+                seatSelect.appendChild(option);
+            });
+            document.getElementById('seat_selection').style.display = 'block';
+            seatSelect.required = true;
+        } else if (type === 'hotel') {
+            document.getElementById('hotel_fields').style.display = 'block';
+            document.getElementById('check_in').required = true;
+            document.getElementById('check_out').required = true;
+        }
+    }
+
+    function closeBookingModal() {
+        document.getElementById('bookingModal').style.display = 'none';
+        document.getElementById('bookingForm').reset();
+    }
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+        const modal = document.getElementById('bookingModal');
+        if (event.target == modal) {
+            closeBookingModal();
+        }
+    }
+
+    // Validate hotel dates
+    document.getElementById('bookingForm').addEventListener('submit', function(e) {
+        const bookingType = document.getElementById('modal_booking_type').value;
+        
+        if (bookingType === 'hotel') {
+            const checkIn = new Date(document.getElementById('check_in').value);
+            const checkOut = new Date(document.getElementById('check_out').value);
+            
+            if (checkOut <= checkIn) {
+                e.preventDefault();
+                alert('Check-out date must be after check-in date!');
+            }
+        }
+    });
+</script>
+{% endblock %}

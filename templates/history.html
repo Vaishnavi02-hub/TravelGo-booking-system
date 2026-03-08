@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+
+{% block title %}Booking History - TravelGo{% endblock %}
+
+{% block content %}
+<section class="history-section">
+    <div class="container">
+        <div class="history-header">
+            <a href="{{ url_for('dashboard') }}" class="back-link">← Back to Dashboard</a>
+            <h1>My Bookings</h1>
+            <p>View and manage all your travel bookings</p>
+        </div>
+
+        {% if bookings %}
+            <div class="bookings-list">
+                {% for booking in bookings %}
+                <div class="booking-card-history">
+                    <div class="booking-card-header">
+                        <div class="booking-info">
+                            <h3>{{ booking.option_name }}</h3>
+                            <span class="booking-type-badge booking-type-{{ booking.booking_type }}">
+                                {% if booking.booking_type == 'bus' %}🚌 Bus
+                                {% elif booking.booking_type == 'train' %}🚆 Train
+                                {% elif booking.booking_type == 'flight' %}✈️ Flight
+                                {% elif booking.booking_type == 'hotel' %}🏨 Hotel
+                                {% endif %}
+                            </span>
+                        </div>
+                        <div class="booking-id">
+                            <strong>Booking ID:</strong> {{ booking.booking_id }}
+                        </div>
+                    </div>
+
+                    <div class="booking-card-body">
+                        <div class="booking-details-grid">
+                            {% if booking.booking_type in ['bus', 'train', 'flight'] %}
+                                <div class="detail-item">
+                                    <span class="detail-label">From:</span>
+                                    <span class="detail-value">{{ booking.from }}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">To:</span>
+                                    <span class="detail-value">{{ booking.to }}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Travel Date:</span>
+                                    <span class="detail-value">{{ booking.travel_date }}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Time:</span>
+                                    <span class="detail-value">{{ booking.travel_time }}</span>
+                                </div>
+                                {% if booking.booking_type == 'bus' %}
+                                <div class="detail-item">
+                                    <span class="detail-label">Seat:</span>
+                                    <span class="detail-value">{{ booking.seat }}</span>
+                                </div>
+                                {% endif %}
+                                {% if booking.booking_type in ['train', 'flight'] %}
+                                <div class="detail-item">
+                                    <span class="detail-label">Class:</span>
+                                    <span class="detail-value">{{ booking.class }}</span>
+                                </div>
+                                {% endif %}
+                            {% elif booking.booking_type == 'hotel' %}
+                                <div class="detail-item">
+                                    <span class="detail-label">Location:</span>
+                                    <span class="detail-value">{{ booking.location }}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Check-in:</span>
+                                    <span class="detail-value">{{ booking.check_in }}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Check-out:</span>
+                                    <span class="detail-value">{{ booking.check_out }}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Guests:</span>
+                                    <span class="detail-value">{{ booking.guests }}</span>
+                                </div>
+                            {% endif %}
+                            
+                            <div class="detail-item">
+                                <span class="detail-label">Price:</span>
+                                <span class="detail-value price">₹{{ booking.price }}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Booked On:</span>
+                                <span class="detail-value">{{ booking.booking_date[:10] }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="booking-card-footer">
+                        <span class="status-badge status-{{ booking.status }}">
+                            {{ booking.status.capitalize() }}
+                        </span>
+                        <form method="POST" action="{{ url_for('cancel_booking', booking_id=booking.booking_id) }}" style="display: inline;">
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to cancel this booking?')">
+                                Cancel Booking
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Summary Section -->
+            <div class="bookings-summary">
+                <h3>Booking Summary</h3>
+                <div class="summary-stats">
+                    <div class="summary-item">
+                        <span class="summary-label">Total Bookings:</span>
+                        <span class="summary-value">{{ bookings|length }}</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Total Spent:</span>
+                        <span class="summary-value">${{ bookings|sum(attribute='price') }}</span>
+                    </div>
+                </div>
+            </div>
+
+        {% else %}
+            <div class="no-bookings">
+                <div class="no-bookings-icon">📭</div>
+                <h2>No Bookings Yet</h2>
+                <p>You haven't made any bookings yet. Start your journey now!</p>
+                <a href="{{ url_for('dashboard') }}" class="btn btn-primary">Start Booking</a>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

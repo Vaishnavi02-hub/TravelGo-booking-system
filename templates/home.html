@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+
+{% block title %}TravelGo - Book Your Journey Today{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-content">
+        <h1>Explore the World with TravelGo</h1>
+        <p>Book buses, trains, flights, and hotels all in one place</p>
+        {% if not session.user_email %}
+            <div class="hero-buttons">
+                <a href="{{ url_for('register') }}" class="btn btn-primary">Get Started</a>
+                <a href="{{ url_for('login') }}" class="btn btn-secondary">Login</a>
+            </div>
+        {% else %}
+            <div class="hero-buttons">
+                <a href="{{ url_for('dashboard') }}" class="btn btn-primary">Go to Dashboard</a>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features">
+    <div class="container">
+        <h2 class="section-title">Why Choose TravelGo?</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🚌</div>
+                <h3>Bus Booking</h3>
+                <p>Comfortable and affordable bus travel with seat selection</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🚆</div>
+                <h3>Train Tickets</h3>
+                <p>Fast and convenient train journeys across the country</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">✈️</div>
+                <h3>Flight Booking</h3>
+                <p>Fly to your destination with the best airline deals</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🏨</div>
+                <h3>Hotel Reservations</h3>
+                <p>Find the perfect stay from budget to luxury hotels</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Services Section -->
+<section class="services">
+    <div class="container">
+        <h2 class="section-title">Our Services</h2>
+        <div class="services-grid">
+            <div class="service-card">
+                <img src="{{ url_for('static', filename='images/bus-service.jpg') }}" alt="Bus" onerror="this.src='https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=500'">
+                <div class="service-content">
+                    <h3>Bus Services</h3>
+                    <p>Travel comfortably with our wide network of bus routes. Choose your preferred seat and enjoy the journey.</p>
+                    {% if session.user_email %}
+                        <a href="{{ url_for('book_bus') }}" class="btn btn-primary">Book Now</a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="service-card">
+                <img src="{{ url_for('static', filename='images/train-service.jpg') }}" alt="Train" onerror="this.src='https://images.unsplash.com/photo-1474487548417-781cb71495f3?w=500'">
+                <div class="service-content">
+                    <h3>Train Services</h3>
+                    <p>Experience scenic routes and comfortable rides with our train booking services across multiple classes.</p>
+                    {% if session.user_email %}
+                        <a href="{{ url_for('book_train') }}" class="btn btn-primary">Book Now</a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="service-card">
+                <img src="{{ url_for('static', filename='images/flight-service.jpg') }}" alt="Flight" onerror="this.src='https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=500'">
+                <div class="service-content">
+                    <h3>Flight Services</h3>
+                    <p>Reach your destination faster with our flight booking services. Compare prices and choose the best deal.</p>
+                    {% if session.user_email %}
+                        <a href="{{ url_for('book_flight') }}" class="btn btn-primary">Book Now</a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="service-card">
+                <img src="{{ url_for('static', filename='images/hotel-service.jpg') }}" alt="Hotel" onerror="this.src='https://images.unsplash.com/photo-1566073771259-6a8506099945?w=500'">
+                <div class="service-content">
+                    <h3>Hotel Services</h3>
+                    <p>Find your perfect accommodation from budget-friendly options to luxury hotels with premium amenities.</p>
+                    {% if session.user_email %}
+                        <a href="{{ url_for('book_hotel') }}" class="btn btn-primary">Book Now</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Statistics Section -->
+<section class="stats">
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <h3>50K+</h3>
+                <p>Happy Customers</p>
+            </div>
+            <div class="stat-item">
+                <h3>200+</h3>
+                <p>Destinations</p>
+            </div>
+            <div class="stat-item">
+                <h3>500+</h3>
+                <p>Hotels</p>
+            </div>
+            <div class="stat-item">
+                <h3>24/7</h3>
+                <p>Support</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+{% if not session.user_email %}
+<section class="cta">
+    <div class="container">
+        <h2>Ready to Start Your Journey?</h2>
+        <p>Join thousands of satisfied travelers and book your next trip with TravelGo</p>
+        <a href="{{ url_for('register') }}" class="btn btn-primary btn-large">Sign Up Now</a>
+    </div>
+</section>
+{% endif %}
+{% endblock %}

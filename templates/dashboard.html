@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - TravelGo{% endblock %}
+
+{% block content %}
+<section class="dashboard-section">
+    <div class="container">
+        <div class="dashboard-header">
+            <h1>Welcome, {{ session.user_name }}!</h1>
+            <p>What would you like to book today?</p>
+        </div>
+
+        <!-- Booking Options -->
+        <div class="booking-options">
+            <h2 class="section-title">Choose Your Travel Mode</h2>
+            <div class="booking-grid">
+                <!-- Bus Booking -->
+                <div class="booking-card">
+                    <div class="booking-icon">🚌</div>
+                    <h3>Book a Bus</h3>
+                    <p>Comfortable bus journeys with seat selection</p>
+                    <ul class="booking-features">
+                        <li>✓ Multiple routes available</li>
+                        <li>✓ Choose your seat</li>
+                        <li>✓ Affordable prices</li>
+                    </ul>
+                    <a href="{{ url_for('book_bus') }}" class="btn btn-primary">Book Now</a>
+                </div>
+
+                <!-- Train Booking -->
+                <div class="booking-card">
+                    <div class="booking-icon">🚆</div>
+                    <h3>Book a Train</h3>
+                    <p>Fast and scenic train travel options</p>
+                    <ul class="booking-features">
+                        <li>✓ Economy to First Class</li>
+                        <li>✓ Long-distance routes</li>
+                        <li>✓ Comfortable journey</li>
+                    </ul>
+                    <a href="{{ url_for('book_train') }}" class="btn btn-primary">Book Now</a>
+                </div>
+
+                <!-- Flight Booking -->
+                <div class="booking-card">
+                    <div class="booking-icon">✈️</div>
+                    <h3>Book a Flight</h3>
+                    <p>Quick air travel to your destination</p>
+                    <ul class="booking-features">
+                        <li>✓ Multiple airlines</li>
+                        <li>✓ Economy & Business class</li>
+                        <li>✓ Best prices</li>
+                    </ul>
+                    <a href="{{ url_for('book_flight') }}" class="btn btn-primary">Book Now</a>
+                </div>
+
+                <!-- Hotel Booking -->
+                <div class="booking-card">
+                    <div class="booking-icon">🏨</div>
+                    <h3>Book a Hotel</h3>
+                    <p>Find your perfect accommodation</p>
+                    <ul class="booking-features">
+                        <li>✓ Budget to Luxury</li>
+                        <li>✓ Multiple locations</li>
+                        <li>✓ Top amenities</li>
+                    </ul>
+                    <a href="{{ url_for('book_hotel') }}" class="btn btn-primary">Book Now</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <h2 class="section-title">Quick Actions</h2>
+            <div class="actions-grid">
+                <a href="{{ url_for('booking_history') }}" class="action-card">
+                    <span class="action-icon">📋</span>
+                    <span class="action-text">View Bookings</span>
+                </a>
+                <a href="{{ url_for('book_hotel', category='luxury') }}" class="action-card">
+                    <span class="action-icon">⭐</span>
+                    <span class="action-text">Luxury Hotels</span>
+                </a>
+                <a href="{{ url_for('book_hotel', category='budget') }}" class="action-card">
+                    <span class="action-icon">💰</span>
+                    <span class="action-text">Budget Hotels</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Info Banner -->
+        <div class="info-banner">
+            <div class="info-icon">ℹ️</div>
+            <div class="info-content">
+                <h3>Need Help?</h3>
+                <p>Our customer support team is available 24/7 to assist you with your bookings. Contact us at support@travelgo.com or call +91 7975004074.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
